@@ -1,0 +1,25 @@
+{
+  "name": "shopping-basket",
+  "version": "0.1.0",
+  "description": "Shopping basket example implementation",
+  "main": "index.html",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register || true",
+    "build": "webpack"
+  },
+  "author": "Michal Pasierbski",
+  "repository": "https://github.com/pasierb/shopping-basket.git",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "mocha": "^3.1.0",
+    "riot": "^2.6.2",
+    "riotjs-loader": "^3.0.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {}
+}

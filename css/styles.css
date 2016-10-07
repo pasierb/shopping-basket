@@ -1,0 +1,18 @@
+@import url("milligram.min.css");
+
+body {
+  font-family: monospace;
+}
+
+.text-right {
+  text-align: right;
+}
+
+button {
+  background-color: black;
+  border-color: black;
+  font-size: .8rem;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  padding: 0 1.5rem;
+}
