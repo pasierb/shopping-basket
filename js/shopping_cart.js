@@ -7,14 +7,14 @@ import riot from 'riot';
 // to workaround floating point precision "feature"
 
 export default class ShoppingCart {
+    static get PRODUCT_ADDED() { return 'productAdded'; }
+
     constructor (vent) {
-        this.vent = vent;
         this.clear();
         riot.observable(this);
 
-        vent && vent.on('addProductToBasket', product => {
+        vent && vent.on(vent.constructor.ADD_PRODUCT_TO_CART, product => {
             this.addProduct(product);
-            this.trigger('productAddedToBasket', product);
         });
     }
 
@@ -71,6 +71,7 @@ export default class ShoppingCart {
             this.items = this.items.filter(entry => entry.product.id !== product.id);
         }
 
+        this.trigger(ShoppingCart.PRODUCT_ADDED, product, quantity);
         return this.items;
     }
 }

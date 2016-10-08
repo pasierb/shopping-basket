@@ -7,6 +7,11 @@ import Vent from './vent';
 
 const vent = new Vent();
 const cart = new ShoppingCart(vent);
+
+cart.on(ShoppingCart.PRODUCT_ADDED, function(product, quantity) {
+    vent.trigger('shoppingCart:productAdded', product, quantity);
+});
+
 var products = [
     {
         id: 1,
@@ -32,3 +37,4 @@ var products = [
 
 riot.mount('product-list', { data: products, vent: vent });
 riot.mount('shopping-cart', { cart: cart });
+riot.mount('notification-bar', { vent: vent });

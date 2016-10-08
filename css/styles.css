@@ -4,6 +4,28 @@ h2 {
   white-space: nowrap;
 }
 
+.fixed-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+ul.list-unstyled {
+  list-style: none;
+}
+
+.info-box {
+  background-color: rgba(179, 229, 223, 0.5);
+  padding: 10px 20px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
+
+.info-box .fa {
+  margin-right: 10px;
+}
+
 .text-right {
   text-align: right;
 }

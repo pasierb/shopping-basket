@@ -1,6 +1,7 @@
 'use strict';
 
 import riot from 'riot';
+import ShoppingCart from './shopping_cart';
 
 riot.tag('product-list',
 
@@ -31,7 +32,7 @@ riot.tag('product-list',
     function (opts) {
         this.addToBasket = function(product) {
             return () => {
-                opts.vent.trigger('addProductToBasket', product);
+                opts.vent.trigger(opts.vent.constructor.ADD_PRODUCT_TO_CART, product);
             }
         }
     }
@@ -104,7 +105,7 @@ riot.tag('shopping-cart',
     </table>`,
 
     function(opts) {
-        opts.cart.on('productAddedToBasket', () => this.update());
+        opts.cart.on(ShoppingCart.PRODUCT_ADDED, () => this.update());
 
         this.clear = function() {
             return () => {
@@ -116,6 +117,43 @@ riot.tag('shopping-cart',
             return () => {
                 opts.cart.addProduct(product, quantity);
             }
+        }
+    }
+)
+
+riot.tag('notification-bar',
+
+    `
+        <ul class="list-unstyled">
+            <li class="info-box" each="{message in messages}">
+                <i class="fa fa-info"></i>
+                { message }
+            </li>
+        </ul>
+    `,
+
+    function(opts) {
+        this.messages = [];
+
+        opts.vent.on(opts.vent.constructor.CART_PRODUCT_ADDED, function(product, quantity) {
+            var isAdded = quantity > 0;
+
+            this.messages.push(`
+                ${isAdded ? "added" : "removed"}
+                ${Math.abs(quantity)}
+                ${product.name}(s)
+                ${isAdded ? "to" : "from"} basket
+            `);
+            this.update();
+
+            this.removeLastMessage(1500);
+        }.bind(this));
+
+        this.removeLastMessage = function(timeout = 0) {
+            return setTimeout(function() {
+                this.messages.shift();
+                this.update();
+            }.bind(this), timeout);
         }
     }
 )
