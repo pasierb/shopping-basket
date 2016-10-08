@@ -41,6 +41,9 @@ riot.tag('shopping-cart',
 
     `<table>
         <tbody>
+            <tr hide="{ opts.cart.items.length > 0 }">
+                <td colspan="6" class="text-center">No items</td>
+            </tr>
             <tr each="{ item in opts.cart.items }">
                 <td class="text-right">{ item.quantity } x</td>
                 <td>{ item.product.name }</td>
@@ -57,12 +60,18 @@ riot.tag('shopping-cart',
                         <i class="fa fa-minus"></i>
                     </button>
                     <button onclick="{ alterQuantity(item.product, -item.quantity) }" title="Remove all products">
-                        <i class="fa fa-remove"></i>
+                        <i class="fa fa-trash"></i>
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <div class="text-right" show="{ opts.cart.items.length > 0 }">
+        <button onclick="{ clear() }">
+            <i class="fa fa-trash-o"></i> Clear all
+        </button>
+    </div>
 
     <table>
         <tbody>
@@ -96,6 +105,12 @@ riot.tag('shopping-cart',
 
     function(opts) {
         opts.cart.on('productAddedToBasket', () => this.update());
+
+        this.clear = function() {
+            return () => {
+                opts.cart.clear();
+            }
+        }
 
         this.alterQuantity = function(product, quantity) {
             return () => {
