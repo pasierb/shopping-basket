@@ -4,10 +4,10 @@ h2 {
   white-space: nowrap;
 }
 
-.fixed-top {
-  position: absolute;
-  top: 0;
-  right: 0;
+.fixed-bottom {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
 }
 
 ul.list-unstyled {
