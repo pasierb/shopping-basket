@@ -20,7 +20,7 @@ riot.tag('product-list',
                 </td>
                 <td class="text-right">{ product.price.toFixed(2) }</td>
                 <td class="text-right">
-                    <a onclick="{addToBasket(product)}" title="Add product to basket">
+                    <a onclick="{addToBasket(product)}" title="Add product to basket" class="text-size-xl">
                         <i class="fa fa-cart-plus"></i>
                     </a>
                 </td>
@@ -42,7 +42,7 @@ riot.tag('shopping-cart',
     `<table>
         <tbody>
             <tr each="{ item in opts.cart.items }">
-                <td class="text-right">{ item.quantity }</td>
+                <td class="text-right">{ item.quantity } x</td>
                 <td>{ item.product.name }</td>
                 <td class="text-right">({ item.product.price.toFixed(2) })</td>
                 <td class="text-right">
