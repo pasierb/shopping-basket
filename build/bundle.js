@@ -2797,7 +2797,7 @@
 	    };
 	});
 
-	_riot2.default.tag('shopping-cart', '<table>\n        <tbody>\n            <tr each="{ item in opts.cart.items }">\n                <td class="text-right">{ item.quantity }</td>\n                <td>{ item.product.name }</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ parent.opts.cart.itemValue(item) }</td>\n                <td class="text-right">\n                    <button onclick="{ alterQuantity(item.product, 1) }">+</button>\n                    <button onclick="{ alterQuantity(item.product, -1) }">-</button>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n\n    <table>\n        <tbody>\n            <tr>\n                <td>Subtotal:</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ opts.cart.totalValue() }</td>\n            </tr>\n            <tr>\n                <td>Discounts:</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ opts.cart.totalDiscount() }</td>\n            </tr>\n            <tr>\n                <td>\n                    <u>Total:</u>\n                </td>\n                <td class="text-right">$</td>\n                <td class="text-right">\n                    <b>{ opts.cart.totalValueWithDiscounts() }</b>\n                </td>\n            </tr>\n        </tbody>\n    </table>', function (opts) {
+	_riot2.default.tag('shopping-cart', '<table>\n        <tbody>\n            <tr each="{ item in opts.cart.items }">\n                <td class="text-right">{ item.quantity }</td>\n                <td>{ item.product.name }</td>\n                <td class="text-right">({ item.product.price })</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ parent.opts.cart.itemValue(item) }</td>\n                <td class="text-right">\n                    <button onclick="{ alterQuantity(item.product, 1) }">+</button>\n                    <button onclick="{ alterQuantity(item.product, -1) }">-</button>\n                    <button onclick="{ alterQuantity(item.product, -item.quantity) }">x</button>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n\n    <table>\n        <tbody>\n            <tr>\n                <td>Subtotal:</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ opts.cart.totalValue() }</td>\n            </tr>\n            <tr>\n                <td>Discounts:</td>\n                <td class="text-right">$</td>\n                <td class="text-right">{ opts.cart.totalDiscount() }</td>\n            </tr>\n            <tr>\n                <td>\n                    <strong><u>Total:</u></strong>\n                </td>\n                <td class="text-right">$</td>\n                <td class="text-right">\n                    <strong>{ opts.cart.totalValueWithDiscounts() }</strong>\n                </td>\n            </tr>\n        </tbody>\n    </table>', function (opts) {
 	    var _this = this;
 
 	    opts.cart.on('productAddedToBasket', function () {
@@ -2840,25 +2840,27 @@
 
 	var ShoppingCart = function () {
 	    function ShoppingCart(vent) {
+	        var _this = this;
+
 	        _classCallCheck(this, ShoppingCart);
 
 	        this.vent = vent;
-	        _riot2.default.observable(this);
 	        this.clear();
+	        _riot2.default.observable(this);
 
 	        vent && vent.on('addProductToBasket', function (product) {
-	            this.addProduct(product);
-	            this.trigger('productAddedToBasket', product);
-	        }.bind(this));
+	            _this.addProduct(product);
+	            _this.trigger('productAddedToBasket', product);
+	        });
 	    }
 
 	    _createClass(ShoppingCart, [{
 	        key: 'totalDiscount',
 	        value: function totalDiscount() {
-	            var _this = this;
+	            var _this2 = this;
 
 	            return this.items.map(function (item) {
-	                return Math.round(_this.itemDiscount(item) * 100);
+	                return Math.round(_this2.itemDiscount(item) * 100);
 	            }).reduce(function (sum, value) {
 	                return sum + value;
 	            }, 0) / 100;
@@ -2866,29 +2868,32 @@
 	    }, {
 	        key: 'totalValue',
 	        value: function totalValue() {
+	            var _this3 = this;
+
 	            return this.items.map(function (item) {
-	                return Math.round(this.itemValue(item) * 100);
-	            }, this).reduce(function (sum, value) {
+	                return Math.round(_this3.itemValue(item) * 100);
+	            }).reduce(function (sum, value) {
 	                return sum + value;
 	            }, 0) / 100;
 	        }
 	    }, {
 	        key: 'totalValueWithDiscounts',
 	        value: function totalValueWithDiscounts() {
-	            return (Math.round(this.totalValue() * 100) + Math.round(this.totalDiscount() * 100)) / 100;
+	            var itemsValue = Math.round(this.totalValue() * 100);
+	            var discountValue = Math.round(this.totalDiscount() * 100);
+
+	            return (itemsValue + discountValue) / 100;
 	        }
 	    }, {
 	        key: 'itemDiscount',
 	        value: function itemDiscount(item) {
-	            var discountValue = 0;
-
-	            (item.product.discounts || []).forEach(function (config) {
+	            return (item.product.discounts || []).map(function (config) {
 	                var discount = new _discount2.default(config);
 
-	                discountValue += Math.round(discount.value(item.product.price, item.quantity) * 100);
-	            });
-
-	            return discountValue / 100;
+	                return Math.round(discount.value(item.product.price, item.quantity) * 100);
+	            }).reduce(function (sum, discount) {
+	                return sum + discount;
+	            }, 0) / 100;
 	        }
 	    }, {
 	        key: 'itemValue',
@@ -2935,7 +2940,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -2953,12 +2958,12 @@
 	    }
 
 	    _createClass(Discount, [{
-	        key: "value",
+	        key: 'value',
 	        value: function value(price, quantity) {
 	            return Math.round(price * 100) * this.discountQuantity(quantity) * -1 / 100;
 	        }
 	    }, {
-	        key: "discountQuantity",
+	        key: 'discountQuantity',
 	        value: function discountQuantity(quantity) {
 	            return Math.floor(quantity / this.config.thresholdItems) * this.config.freeItems;
 	        }
