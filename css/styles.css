@@ -8,6 +8,10 @@ h2 {
   text-align: right;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-size-xl {
   font-size: 130%;
 }
