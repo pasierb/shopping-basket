@@ -61,7 +61,7 @@ describe('ShoppingCart', function() {
 
     describe('#clear()', function() {
         it('should empty items', function() {
-            basket.items = [{}, {}];
+            basket.addProduct(apple, 3);
             basket.clear();
             assert.equal(0, basket.items.length);
         });

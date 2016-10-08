@@ -10,7 +10,7 @@ export default class ShoppingCart {
     static get PRODUCT_ADDED() { return 'productAdded'; }
 
     constructor (vent) {
-        this.clear();
+        this.items = [];
         riot.observable(this);
 
         vent && vent.on(vent.constructor.ADD_PRODUCT_TO_CART, product => {
@@ -54,7 +54,9 @@ export default class ShoppingCart {
     }
 
     clear () {
-        this.items = [];
+        this.items.forEach(item => {
+            this.addProduct(item.product, -item.quantity);
+        });
     }
 
     addProduct (product, quantity = 1) {
