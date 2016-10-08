@@ -6,8 +6,23 @@ import ShoppingCart from './shopping_cart';
 riot.tag('product-list',
 
     `<table>
+        <thead>
+            <tr>
+                <th>
+                    Name
+                    <a onclick="{ sort('name') }"><i class="fa fa-caret-up"></i></a>
+                    <a onclick="{ sort('name', true) }"><i class="fa fa-caret-down"></i></a>
+                </th>
+                <th colspan="2">
+                    Price
+                    <a onclick="{ sort('price') }"><i class="fa fa-caret-up"></i></a>
+                    <a onclick="{ sort('price', true) }"><i class="fa fa-caret-down"></i></a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
         <tbody>
-            <tr each="{product in opts.data}">
+            <tr each="{product in products}">
                 <td>
                     <span>{ product.name }</span>
                     <em each="{discount in product.discounts}" class="discount">
@@ -30,6 +45,16 @@ riot.tag('product-list',
     </table>`,
 
     function (opts) {
+        this.products = opts.data;
+
+        this.sort = function(key, reverse = false) {
+            return () => {
+                this.products.sort((a, b) => {
+                    return reverse ? a[key] < b[key] : a[key] > b[key];
+                })
+            }
+        }
+
         this.addToBasket = function(product) {
             return () => {
                 opts.vent.trigger(opts.vent.constructor.ADD_PRODUCT_TO_CART, product);
