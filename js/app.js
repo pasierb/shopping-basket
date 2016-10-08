@@ -9,7 +9,7 @@ const vent = new Vent();
 const cart = new ShoppingCart(vent);
 
 cart.on(ShoppingCart.PRODUCT_ADDED, function(product, quantity) {
-    vent.trigger('shoppingCart:productAdded', product, quantity);
+    vent.trigger(Vent.CART_PRODUCT_ADDED, product, quantity);
 });
 
 var products = [
